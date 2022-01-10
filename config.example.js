@@ -1,4 +1,7 @@
 module.exports = {
-  TOKEN: 'ADD TOKEN HERE',
-  PORT: 1337,
+  port: 1337,
+  mongo: {
+    devURI: 'mongodb://127.0.1/fetcher',
+    prodURI: 'ADD PRODUCTION URI',
+  },
 };
