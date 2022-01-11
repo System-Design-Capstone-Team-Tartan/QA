@@ -4,7 +4,7 @@ const controller = require('./controllers');
 // Connect controller methods to corresponding routes
 
 // Answers List:
-// POST /qa/questions/:question_id/answers
+// GET /qa/questions/:question_id/answers
 // status: 200
 router.get('/questions/:question_id/answers', controller.answers.get);
 
@@ -18,10 +18,10 @@ router.get('/questions', controller.questions.get);
 // status: 201 created
 router.post('/questions', controller.questions.post);
 
-// Add an Answer:
-// POST /qa/questions/:question_id/answers
-// status: 201 created
-router.post('/questions/:question_id/answers', controller.answers.post);
+// Answers List
+// GET /qa/questions/:question_id/answers
+// status: 200 OK
+router.get('/questions/:question_id/answers', controller.answers.get);
 
 // Mark questions as helpful:
 // PUT /qa/questions/:question_id/helpful
