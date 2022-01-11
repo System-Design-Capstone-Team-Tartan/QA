@@ -1,4 +1,4 @@
-var db = require('../db/postgres');
+const db = require('../db/postgres');
 
 module.exports = {
   getAll: () => {
