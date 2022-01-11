@@ -7,12 +7,12 @@ module.exports = {
   },
   post: (req, res) => {
     const { question_id } = req.params;
-    res.status(201).json({ status: 'Created' });
+    res.status(201).json({ status: 'CREATED' });
   },
   putHelpful: (req, res) => {
-    res.status(204).json({ status: 'No content' });
+    res.status(204).json({ status: 'NO CONTENT' });
   },
   putReport: (req, res) => {
-    res.status(204).json({ status: 'No content' });
+    res.status(204).json({ status: 'NO CONTENT' });
   },
 };
