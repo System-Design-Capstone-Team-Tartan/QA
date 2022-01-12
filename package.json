@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "start": "nodemon --ignore node_modules server"
+    "start": "nodemon --ignore node_modules server",
+    "init:db": "psql --host=localhost --dbname=qa --username=admin < server/db/postgres/schema.sql"
   },
   "repository": {
     "type": "git",
