@@ -1,8 +1,8 @@
--- connect to tmp database to reinitialize qa
+-- Connect to tmp database to reinitialize qa
 \c tmp
-
 DROP DATABASE IF EXISTS qa;
 CREATE DATABASE qa;
+-- Connect to qa database
 \c qa
 
 DROP TABLE IF EXISTS questions CASCADE;
@@ -18,8 +18,9 @@ CREATE TABLE questions (
   PRIMARY KEY (question_id)
 );
 
-DROP TABLE IF EXISTS answers CASCADE;
-CREATE TABLE answers (
+-- Create temporary answers & images tables
+DROP TABLE IF EXISTS answers_tmp CASCADE;
+CREATE TABLE answers_tmp (
   answer_id INT NOT NULL,
   question_id INT NOT NULL,
   body varchar(1000),
@@ -28,35 +29,35 @@ CREATE TABLE answers (
   email varchar(60),
   reported BOOLEAN NOT NULL DEFAULT FALSE,
   helpfulness INT NOT NULL DEFAULT 0,
-  image_urls text[],
   FOREIGN KEY (question_id)
     REFERENCES questions(question_id),
   PRIMARY KEY (answer_id)
 );
 
--- [x] Questions headers updated
-copy questions (question_id, product_id, question_body, question_date, asker_name, email, reported, question_helpfulness)
-  from '/home/aaron/Documents/hackReactor/git_repo/SDC/server/db/postgres/CSV/questions.csv'
-  with (format csv, header true, delimiter ',');
-
--- [x] Answers headers updated
-copy answers (answer_id, question_id, body, date, answerer_name, email, reported, helpfulness)
-  from '/home/aaron/Documents/hackReactor/git_repo/SDC/server/db/postgres/CSV/answers.csv'
-  with (format csv, header true, delimiter ',');
-
-DROP TABLE IF EXISTS images CASCADE;
-CREATE TABLE images (
+DROP TABLE IF EXISTS images_tmp CASCADE;
+CREATE TABLE images_tmp (
   image_id INT NOT NULL,
   answer_id INT NOT NULL,
   url varchar(3000),
-  FOREIGN KEY (answer_id)
-    REFERENCES answers(answer_id),
   PRIMARY KEY (image_id)
 );
 
--- [x] Photos headers updated
-copy images (image_id, answer_id, url)
+-- Copy data from questions.csv, answers.csv, & answers_photos.csv
+copy questions (question_id, product_id, question_body, question_date, asker_name, email, reported, question_helpfulness)
+  from '/home/aaron/Documents/hackReactor/git_repo/SDC/server/db/postgres/CSV/questions.csv'
+  with (format csv, header true, delimiter ',');
+copy answers_tmp (answer_id, question_id, body, date, answerer_name, email, reported, helpfulness)
+  from '/home/aaron/Documents/hackReactor/git_repo/SDC/server/db/postgres/CSV/answers.csv'
+  with (format csv, header true, delimiter ',');
+copy images_tmp (image_id, answer_id, url)
   from '/home/aaron/Documents/hackReactor/git_repo/SDC/server/db/postgres/CSV/answers_photos.csv'
   with (format csv, header true, delimiter ',');
 
-  -- TODO: map urls to answers table and store in a single column as an array
+  -- Map image_urls (array) as a column w/in new answers table
+DROP TABLE IF EXISTS answers CASCADE;
+CREATE TABLE answers AS (
+  SELECT a.answer_id, a.question_id, a.body, a.date, a.answerer_name, a.email, a.reported, a.helpfulness, i.image_urls
+  FROM answers_tmp a
+  LEFT JOIN (SELECT i.answer_id, array_agg(i.url) FROM images_tmp i GROUP BY i.answer_id) AS i (answer_id, image_urls)
+  ON a.answer_id=i.answer_id
+);
