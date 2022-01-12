@@ -50,12 +50,12 @@ CREATE TABLE images (
   answer_id INT NOT NULL,
   url varchar(3000),
   FOREIGN KEY (answer_id)
-    REFERENCES answers(answer_id)
+    REFERENCES answers(answer_id),
   PRIMARY KEY (image_id)
 );
 
 -- [x] Photos headers updated
-copy answers (image_id, answer_id, url)
+copy images (image_id, answer_id, url)
   from '/home/aaron/Documents/hackReactor/git_repo/SDC/server/db/postgres/CSV/answers_photos.csv'
   with (format csv, header true, delimiter ',');
 
