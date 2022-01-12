@@ -6,5 +6,9 @@ pool.connect();
 
 module.exports = {
   // promise
-  query: (text, params) => pool.query(text, params),
+  query: (text, params) => pool.query(text, params)
+    .then((res) => {
+      pool.end();
+      return res;
+    }),
 };
