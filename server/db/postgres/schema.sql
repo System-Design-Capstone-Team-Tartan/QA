@@ -56,8 +56,8 @@ copy images_tmp (image_id, answer_id, url)
   -- Map image_urls (array) as a column w/in new answers table
 DROP TABLE IF EXISTS answers CASCADE;
 CREATE TABLE answers AS (
-  SELECT a.answer_id, a.question_id, a.body, a.date, a.answerer_name, a.email, a.reported, a.helpfulness, i.image_urls
+  SELECT a.answer_id, a.question_id, a.body, a.date, a.answerer_name, a.email, a.reported, a.helpfulness, i.photos
   FROM answers_tmp a
-  LEFT JOIN (SELECT i.answer_id, array_agg(i.url) FROM images_tmp i GROUP BY i.answer_id) AS i (answer_id, image_urls)
+  LEFT JOIN (SELECT i.answer_id, array_agg(i.url) FROM images_tmp i GROUP BY i.answer_id) AS i (answer_id, photos)
   ON a.answer_id=i.answer_id
 );
