@@ -3,8 +3,12 @@ const db = require('../db/postgres');
 module.exports = {
   // Returns answers for a given question. This list does not include any reported answers.
   // Should sort by helpfulness w/ seller's answers on top
-  query: (questionId, count = 5, page = 1) => db.query(
-    'SELECT * FROM answers WHERE question_id=$1 AND reported=false ORDER BY helpfulness DESC LIMIT $2 OFFSET $3;',
+  query: (questionId, count, page) => db.query(
+    `SELECT answer_id, body, date, answerer_name, helpfulness, photos
+     FROM answers
+     WHERE question_id=$1 AND reported=false
+     ORDER BY helpfulness DESC
+     LIMIT $2 OFFSET $3;`,
     [questionId, count, ((page - 1) * count)],
   ),
   // Adds an answer for the given question
