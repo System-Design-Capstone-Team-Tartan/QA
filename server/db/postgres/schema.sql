@@ -12,7 +12,7 @@ CREATE TABLE questions (
   question_body varchar(1000),
   question_date TIMESTAMP WITH TIME ZONE,
   asker_name varchar(60),
-  question_helpfulnes INT NOT NULL,
+  question_helpfulness INT NOT NULL,
   reported BOOLEAN NOT NULL DEFAULT FALSE,
   email varchar(60),
   PRIMARY KEY (question_id)
@@ -34,15 +34,14 @@ CREATE TABLE answers (
   PRIMARY KEY (answer_id)
 );
 
--- [] Questions headers updated
--- id	 product_id	 body	 date_written	 asker_name	 asker_email	 reported	 helpful
--- \COPY questions (id, product_id, body, date_written, asker_name, asker_email, reported, helpful)
---   FROM './CSV/questions.csv'
---   with (format csv,header true, delimiter ',');
+-- [x] Questions headers updated
+copy questions (question_id, product_id, question_body, question_date, asker_name, email, reported, question_helpfulness)
+  from '/home/aaron/Documents/hackReactor/git_repo/SDC/server/db/postgres/CSV/questions.csv'
+  with (format csv,header true, delimiter ',');
 
 -- [x] Answers headers updated
-COPY answers (answer_id, question_id, body, date, answerer_name, email, reported, helpfulness)
-  FROM '/CSV/answers.csv'
+copy answers (answer_id, question_id, body, date, answerer_name, email, reported, helpfulness)
+  from '/home/aaron/Documents/hackReactor/git_repo/SDC/server/db/postgres/CSV/answers.csv'
   with (format csv, header true, delimiter ',');
 
 -- Photos headers
