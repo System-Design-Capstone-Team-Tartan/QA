@@ -37,12 +37,26 @@ CREATE TABLE answers (
 -- [x] Questions headers updated
 copy questions (question_id, product_id, question_body, question_date, asker_name, email, reported, question_helpfulness)
   from '/home/aaron/Documents/hackReactor/git_repo/SDC/server/db/postgres/CSV/questions.csv'
-  with (format csv,header true, delimiter ',');
+  with (format csv, header true, delimiter ',');
 
 -- [x] Answers headers updated
 copy answers (answer_id, question_id, body, date, answerer_name, email, reported, helpfulness)
   from '/home/aaron/Documents/hackReactor/git_repo/SDC/server/db/postgres/CSV/answers.csv'
   with (format csv, header true, delimiter ',');
 
--- Photos headers
--- id, answer_id, url
+DROP TABLE IF EXISTS images CASCADE;
+CREATE TABLE images (
+  image_id INT NOT NULL,
+  answer_id INT NOT NULL,
+  url varchar(3000),
+  FOREIGN KEY (answer_id)
+    REFERENCES answers(answer_id)
+  PRIMARY KEY (image_id)
+);
+
+-- [x] Photos headers updated
+copy answers (image_id, answer_id, url)
+  from '/home/aaron/Documents/hackReactor/git_repo/SDC/server/db/postgres/CSV/answers_photos.csv'
+  with (format csv, header true, delimiter ',');
+
+  -- TODO: map urls to answers table and store in a single column as an array
