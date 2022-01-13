@@ -19,16 +19,17 @@ CREATE TABLE questions (
 );
 
 -- Create temporary answers & images tables
-DROP TABLE IF EXISTS answers_tmp CASCADE;
-CREATE TABLE answers_tmp (
-  answer_id INT NOT NULL,
+DROP TABLE IF EXISTS answers CASCADE;
+CREATE TABLE answers (
+  answer_id SERIAL,
   question_id INT NOT NULL,
-  body varchar(1000),
-  date TIMESTAMP WITH TIME ZONE,
-  answerer_name varchar(60),
-  email varchar(60),
+  body varchar(1000) NOT NULL,
+  date TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  answerer_name varchar(60) NOT NULL,
+  email varchar(60) NOT NULL,
   reported BOOLEAN NOT NULL DEFAULT FALSE,
   helpfulness INT NOT NULL DEFAULT 0,
+  photos TEXT[],
   FOREIGN KEY (question_id)
     REFERENCES questions(question_id),
   PRIMARY KEY (answer_id)
@@ -46,22 +47,23 @@ CREATE TABLE images_tmp (
 copy questions (question_id, product_id, question_body, question_date, asker_name, email, reported, question_helpfulness)
   from '/home/aaron/Documents/hackReactor/git_repo/SDC/server/db/postgres/CSV/questions.csv'
   with (format csv, header true, delimiter ',');
-copy answers_tmp (answer_id, question_id, body, date, answerer_name, email, reported, helpfulness)
+copy answers (answer_id, question_id, body, date, answerer_name, email, reported, helpfulness)
   from '/home/aaron/Documents/hackReactor/git_repo/SDC/server/db/postgres/CSV/answers.csv'
   with (format csv, header true, delimiter ',');
 copy images_tmp (image_id, answer_id, url)
   from '/home/aaron/Documents/hackReactor/git_repo/SDC/server/db/postgres/CSV/answers_photos.csv'
   with (format csv, header true, delimiter ',');
 
--- Update SERIAL sequence for questions.question_id column
+-- Update SERIAL sequence for questions.question_id column & answers.answer_id
 SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"questions"', 'question_id')),
 (SELECT (MAX("question_id") + 1) FROM "questions"), FALSE);
+SELECT SETVAL((SELECT PG_GET_SERIAL_SEQUENCE('"answers"', 'answer_id')),
+(SELECT (MAX("answer_id") + 1) FROM "answers"), FALSE);
 
   -- Map image_urls (array) as a column w/in new answers table
-DROP TABLE IF EXISTS answers CASCADE;
-CREATE TABLE answers AS (
-  SELECT a.answer_id, a.question_id, a.body, a.date, a.answerer_name, a.email, a.reported, a.helpfulness, i.photos
-  FROM answers_tmp a
-  LEFT JOIN (SELECT answer_id, array_agg(url) FROM images_tmp GROUP BY answer_id) AS i (answer_id, photos)
-  ON a.answer_id=i.answer_id
-);
+UPDATE answers
+SET photos=i.urls
+FROM (SELECT answer_id, array_agg(i.url) FROM images_tmp i GROUP BY i.answer_id) AS i (answer_id, urls)
+WHERE answers.answer_id=i.answer_id;
+
+DROP TABLE IF EXISTS images_tmp CASCADE;
