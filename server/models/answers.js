@@ -18,9 +18,19 @@ module.exports = {
     [questionId, body, name, email, photos],
   ),
   // Updates an answer to show it was found helpful.
+  updateHelpful: (answerId) => db.query(
+    `UPDATE answers
+    SET helpfulness=helpfulness + 1
+    WHERE answer_id = $1;`,
+    [answerId],
+  ),
   // Updates an answer to show it has been reported.
   // Note, this action does not delete the answer,
   // but the answer will not be returned in the above GET request.
-  update: () => {
-  },
+  updateReported: (answerId) => db.query(
+    `UPDATE answers
+     SET reported=true
+     WHERE answer_id = $1;`,
+    [answerId],
+  ),
 };
