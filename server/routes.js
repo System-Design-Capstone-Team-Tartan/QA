@@ -41,6 +41,6 @@ router.put('/answers/:answer_id/helpful', controller.answers.putHelpful);
 // Report answer:
 // PUT /qa/answers/:answer_id/report
 // status: 204 NO CONTENT
-router.put('/answers/:answer_id/report', controller.answers.putHelpful);
+router.put('/answers/:answer_id/report', controller.answers.putReport);
 
 module.exports = router;
