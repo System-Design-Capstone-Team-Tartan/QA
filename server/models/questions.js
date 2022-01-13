@@ -14,8 +14,11 @@ module.exports = {
     [productId.toString(), count, ((page - 1) * count)],
   ),
   // Adds a question for the given product
-  insert: () => {
-  },
+  insert: (productId, body, name, email) => db.query(
+    `INSERT INTO questions (product_id, question_body, asker_name, email)
+     VALUES ($1, $2, $3, $4);`,
+    [productId, body, name, email],
+  ),
   // Updates a question to show it was found helpful.
   updateHelpful: () => {
   },
