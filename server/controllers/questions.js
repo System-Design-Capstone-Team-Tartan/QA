@@ -15,18 +15,31 @@ module.exports = {
     } else {
       models.questions.query(productId, count, page)
         .then((response) => {
-          const { rows: questions } = response;
-          if (!questions || questions.length < 1) {
+          const { rows: questionsArray } = response;
+          if (!questionsArray || questionsArray.length < 1) {
             res.status(400).json({ status: 'Error', msg: 'No results' });
           } else {
-            const promises = questions.map((question) => models.answers.query(
-              question.question_id
+            const queryAnswers = questionsArray.map((question) => models.answers.query(
+              question.question_id,
             ));
-            Promise.all(promises)
-              .then(answers => {
+            Promise.all(queryAnswers)
+              .then((queryAnswersResponseArray) => {
                 // TODO: map the answers into questions as a new property 'answers that's an object
                 // with key=answer_id and all properties contained
-                const results = [];
+                const results = questionsArray.map((question, idx) => {
+                  const answersObj = queryAnswersResponseArray[idx].rows.reduce(
+                    (obj, answer) => {
+                      const ans = answer;
+                      ans.id = answer.answer_id;
+                      delete ans.answer_id;
+                      return Object.assign(obj, { [ans.id]: ans });
+                    },
+                    {},
+                  );
+                  const q = question;
+                  q.answers = answersObj;
+                  return q;
+                });
                 res.status(200).json({
                   status: 'OK',
                   data: {
