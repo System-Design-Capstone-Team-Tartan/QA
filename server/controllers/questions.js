@@ -84,9 +84,28 @@ module.exports = {
     }
   },
   putHelpful: (req, res) => {
-    res.status(204).json({ status: 'NO CONTENT' });
+    const { question_id } = req.params;
+    const questionId = question_id.toString();
+    models.questions.updateHelpful(questionId)
+      .then((response) => {
+        res.status(204).json({ status: 'NO CONTENT' });
+      })
+      .catch((err) => {
+        console.error('Internal database error updating helpful count\n', err);
+        res.status(500).json({ msg: 'Internal database error updating helpful count for question\n' });
+      });
   },
   putReport: (req, res) => {
-    res.status(204).json({ status: 'NO CONTENT' });
+    const { question_id } = req.params;
+    const questionId = question_id.toString();
+    console.log(questionId)
+    models.questions.updateReported(questionId)
+      .then((response) => {
+        res.status(204).json({ status: 'NO CONTENT' });
+      })
+      .catch((err) => {
+        console.error('Internal database error updating helpful count\n', err);
+        res.status(500).json({ msg: 'Internal database error updating reported for question\n' });
+      });
   },
 };
