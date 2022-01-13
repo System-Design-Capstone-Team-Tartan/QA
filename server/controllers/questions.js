@@ -24,7 +24,8 @@ module.exports = {
             ));
             Promise.all(queryAnswers)
               .then((queryAnswersResponseArray) => {
-                // TODO: map the answers into questions as a new property 'answers that's an object
+                // Map the answersResponseArray into questionsArray as
+                // a new property 'answers that's an object
                 // with key=answer_id and all properties contained
                 const results = questionsArray.map((question, idx) => {
                   const answersObj = queryAnswersResponseArray[idx].rows.reduce(
