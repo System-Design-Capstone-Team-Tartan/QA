@@ -36,11 +36,11 @@ router.put('/questions/:question_id/report', controller.questions.putReport);
 // Mark answer as helpful:
 // PUT /qa/answers/:answer_id/helpful
 // Status: 204 NO CONTENT
-router.put('/answers/:answer_id/helpful', controller.questions.putHelpful);
+router.put('/answers/:answer_id/helpful', controller.answers.putHelpful);
 
 // Report answer:
 // PUT /qa/answers/:answer_id/report
 // status: 204 NO CONTENT
-router.put('/answers/:answer_id/report', controller.questions.putHelpful);
+router.put('/answers/:answer_id/report', controller.answers.putHelpful);
 
 module.exports = router;
