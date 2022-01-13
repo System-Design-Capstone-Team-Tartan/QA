@@ -20,7 +20,7 @@ module.exports = {
   // Updates an answer to show it was found helpful.
   updateHelpful: (answerId) => db.query(
     `UPDATE answers
-    SET helpfulness=helpfulness + 1
+    SET helpfulness=helpfulness+1
     WHERE answer_id = $1;`,
     [answerId.toString()],
   ),
@@ -30,7 +30,7 @@ module.exports = {
   updateReported: (answerId) => db.query(
     `UPDATE answers
      SET reported=true
-     WHERE answer_id = $1;`,
+     WHERE answer_id=$1;`,
     [answerId.toString()],
   ),
 };
