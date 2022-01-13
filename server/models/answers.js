@@ -12,9 +12,10 @@ module.exports = {
     [questionId, count, ((page - 1) * count)],
   ),
   // Adds an answer for the given question
-  create: (body, name, email, photos) => db.query(
-    'INSERT INTO answers (body, answerer_name, email, photos) VALUES ($1, $2, $3, $4)',
-    [body, name, email, photos],
+  create: (questionId, body, name, email, photos) => db.query(
+    `INSERT INTO answers (question_id, body, answerer_name, email, photos)
+     VALUES ($1, $2, $3, $4, $5);`,
+    [questionId, body, name, email, photos],
   ),
   // Updates an answer to show it was found helpful.
   // Updates an answer to show it has been reported.
