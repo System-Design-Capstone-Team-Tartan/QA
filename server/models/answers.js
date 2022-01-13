@@ -3,13 +3,13 @@ const db = require('../db/postgres');
 module.exports = {
   // Returns answers for a given question. This list does not include any reported answers.
   // Should sort by helpfulness w/ seller's answers on top
-  query: (questionId, count, page) => db.query(
+  query: (questionId, count = 5, page = 1) => db.query(
     `SELECT answer_id, body, date, answerer_name, helpfulness, photos
      FROM answers
      WHERE question_id=$1 AND reported=false
      ORDER BY helpfulness DESC
      LIMIT $2 OFFSET $3;`,
-    [questionId, count, ((page - 1) * count)],
+    [questionId.toString(), count, ((page - 1) * count)],
   ),
   // Adds an answer for the given question
   create: (questionId, body, name, email, photos) => db.query(
@@ -22,7 +22,7 @@ module.exports = {
     `UPDATE answers
     SET helpfulness=helpfulness + 1
     WHERE answer_id = $1;`,
-    [answerId],
+    [answerId.toString()],
   ),
   // Updates an answer to show it has been reported.
   // Note, this action does not delete the answer,
@@ -31,6 +31,6 @@ module.exports = {
     `UPDATE answers
      SET reported=true
      WHERE answer_id = $1;`,
-    [answerId],
+    [answerId.toString()],
   ),
 };
