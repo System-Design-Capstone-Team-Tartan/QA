@@ -2,9 +2,11 @@ const models = require('../models');
 
 module.exports = {
   get: (req, res) => {
-    const { count = 5, page = 1 } = req.query;
-    const { question_id } = req.params;
-    const questionId = question_id.toString();
+    let { count = 5, page = 1 } = req.query;
+    const { question_id: questionId } = req.params;
+    count = Number(count);
+    page = Number(page);
+    questionId = questionId.toString();
     if (count % 1 !== 0 || count <= 0) {
       res.status(400).json({ status: 'Error', msg: 'count must be whole number greater than 0' });
     } else if (page % 1 !== 0 || page <= 0) {
