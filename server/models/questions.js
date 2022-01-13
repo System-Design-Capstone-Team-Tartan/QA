@@ -20,12 +20,19 @@ module.exports = {
     [productId, body, name, email],
   ),
   // Updates a question to show it was found helpful.
-  updateHelpful: () => {
-  },
+  updateHelpful: (questionId) => db.query(
+    `UPDATE questions
+    SET question_helpfulness=question_helpfulness+1
+    WHERE question_id=$1;`,
+    [questionId],
+  ),
   // Updates a question to show it was reported.
   // Note, this action does not delete the question,
   // but the question will not be returned in the above GET request.
-  updateReported: () => {
-
-  },
+  updateReported: (questionId) => db.query(
+    `UPDATE questions
+     SET reported=true
+     WHERE question_id=$1;`,
+    [questionId],
+  ),
 };
