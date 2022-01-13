@@ -22,6 +22,7 @@ module.exports = {
             const queryAnswers = questionsArray.map((question) => models.answers.query(
               question.question_id,
             ));
+            // TODO: Possible optimization: JOINING on question_id might be faster
             Promise.all(queryAnswers)
               .then((queryAnswersResponseArray) => {
                 // Map the answersResponseArray into questionsArray as
