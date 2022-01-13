@@ -62,25 +62,25 @@ module.exports = {
   putHelpful: (req, res) => {
     const { answer_id } = req.params;
     const answerId = answer_id.toString();
-    return models.answers.updateHelpful(answerId)
+    models.answers.updateHelpful(answerId)
       .then((response) => {
         res.status(204).json({ status: 'NO CONTENT' });
       })
       .catch((err) => {
         console.error('Internal database error updating helpful count\n', err);
-        res.status(500).json({ msg: 'Internal database error updating helpful count\n' });
+        res.status(500).json({ msg: 'Internal database error updating helpful count for answer\n' });
       });
   },
   putReport: (req, res) => {
     const { answer_id } = req.params;
     const answerId = answer_id.toString();
-    return models.answers.updateReported(answerId)
+    models.answers.updateReported(answerId)
       .then((response) => {
         res.status(204).json({ status: 'NO CONTENT' });
       })
       .catch((err) => {
         console.error('Internal database error updating reported\n', err);
-        res.status(500).json({ msg: 'Internal database error updating reported\n' });
+        res.status(500).json({ msg: 'Internal database error updating reported for answer\n' });
       });
   },
 };
