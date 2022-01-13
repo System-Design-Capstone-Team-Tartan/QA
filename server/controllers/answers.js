@@ -41,6 +41,7 @@ module.exports = {
     } else if (!name || typeof name !== 'string' || name.length > 60) {
       res.status(400).json({ status: 'Error', msg: 'name must be string <= 60 chars in length' });
     } else if (!email || typeof email !== 'string' || email.length > 60) {
+      // TODO: use regex for e-mail verification
       res.status(400).json({ status: 'Error', msg: 'email must be string <= 60 chars in length' });
     } else if (!Array.isArray(photos) || photos.some((photo) => typeof photo !== 'string')) {
       res.status(400).json({ status: 'Error', msg: 'photos must be array of strings' });
