@@ -5,7 +5,8 @@ module.exports = {
   // for a particular product. This list does not
   // include any reported questions.
   query: (productId, count, page) => db.query(
-    `SELECT question_id, question_body, question_date, asker_name, question_helpfulness, reported
+    `SELECT question_id, question_body, question_date, asker_name,
+             question_helpfulness, reported
      FROM questions
      WHERE product_id=$1
      ORDER BY question_helpfulness DESC
