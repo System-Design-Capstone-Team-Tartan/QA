@@ -20,9 +20,7 @@ describe('Q&A GET endpoints', () => {
     const questionId = 1;
     axios.get(`http://${config.host}:${config.port}/qa/questions/${questionId}/answers`)
       .then((response) => {
-        console.log(response)
         const { data } = response.data;
-        console.log(data.results)
         data.results.forEach((answer) => {
           expect(Object.keys(answer)).toEqual(Object.keys(sampleData.answers.results[0]));
         });
