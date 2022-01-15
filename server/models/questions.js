@@ -5,7 +5,7 @@ module.exports = {
   // for a particular product. This list does not
   // include any reported questions.
   query: (productId, count = 5, page = 1) => db.query(
-    `SELECT q.question_id, q.question_body, q.question_date, q.asker_name, q.question_helpfulness, q.reported, answers_array.answers
+    `SELECT *
      FROM questions q
      LEFT JOIN
       (SELECT question_id, json_agg(ans) AS answers

@@ -19,7 +19,26 @@ module.exports = {
           if (!questionsArray || questionsArray.length < 1) {
             res.status(400).json({ status: 'Error', msg: 'No results' });
           } else {
-            const results = questionsArray;
+            // TODO: move this logic to a utility fn
+            // update Copied variables
+            const results = questionsArray.map((question) => {
+              const questionCopy = question;
+              const answersCopy = question.answers.reduce(
+                (obj, answer) => {
+                  const answerCopy = answer;
+                  delete answerCopy.question_id;
+                  delete answerCopy.reported;
+                  delete answerCopy.email;
+                  answerCopy.id = answerCopy.answer_id;
+                  delete answerCopy.answer_id;
+                  Object.assign(obj, { [answer.id]: answer });
+                  return obj;
+                },
+                {},
+              );
+              questionCopy.answers = answersCopy;
+              return questionCopy;
+            });
             res.status(200).json({
               status: 'OK',
               data: {
