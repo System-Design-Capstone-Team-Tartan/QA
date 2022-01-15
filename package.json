@@ -1,0 +1,38 @@
+{
+  "name": "atelier-cart-api",
+  "version": "1.0.0",
+  "description": "Back-end for e-commerce app",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "start": "nodemon --ignore node_modules server",
+    "init:db": "psql --host=localhost --dbname=qa --username=admin < server/db/postgres/schema.sql"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/System-Design-Capstone-Team-Tartan/CartAPI.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/System-Design-Capstone-Team-Tartan/CartAPI/issues"
+  },
+  "homepage": "https://github.com/System-Design-Capstone-Team-Tartan/CartAPI#readme",
+  "devDependencies": {
+    "axios": "^0.24.0",
+    "eslint": "^8.6.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.4"
+  },
+  "dependencies": {
+    "bluebird": "^3.7.2",
+    "cors": "^2.8.5",
+    "express": "^4.17.2",
+    "jest": "^27.4.7",
+    "lodash": "^4.17.21",
+    "mongoose": "^6.1.6",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.15",
+    "pg": "^8.7.1"
+  }
+}
