@@ -6,11 +6,12 @@ module.exports = {
     let { question_id: questionId } = req.params;
     count = Number(count);
     page = Number(page);
-    questionId = questionId.toString();
     if (count % 1 !== 0 || count <= 0) {
       res.status(400).json({ status: 'Error', msg: 'count must be whole number greater than 0' });
     } else if (page % 1 !== 0 || page <= 0) {
       res.status(400).json({ status: 'Error', msg: 'page must be whole number greater than 0' });
+    } else if (!questionId || Number.isNaN(parseInt(questionId, 10))) {
+      res.status(400).json({ status: 'Error', msg: 'question_id is required and must be a number' });
     } else {
       models.answers.query(questionId, count, page)
         .then((response) => {
