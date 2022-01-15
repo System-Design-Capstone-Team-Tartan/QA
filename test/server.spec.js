@@ -34,7 +34,7 @@ describe('Q&A POST endpoints', () => {
   afterAll(() => {
     db.end();
   }); // TODO: end pool afterwards and determine what async fns are not stopped after tests;
-  it('Should add a question to the database (questions endpoint)', (done) => {
+  it('Should add question to the questions table of the qa database', (done) => {
     const payload = {
       body: 'Can I wash it?',
       name: 'InquisitiveUser',
@@ -60,7 +60,45 @@ describe('Q&A POST endpoints', () => {
           .then((response) => {
             db.query(
               'DELETE FROM questions WHERE product_id=$1 AND email=$2',
-              [payload.product_id, payload.email],
+              queryParams,
+            );
+            done();
+          })
+          .catch((err) => {
+            console.error(err);
+            done();
+          });
+      });
+  });
+
+  it('Should add an answer to the answers table of the qa database', (done) => {
+    const questionId = 1;
+    const payload = {
+      body: 'Yes you can!',
+      name: 'IHaveAnswers',
+      email: 'AskMeAQuestion@mail.com',
+      photos: [],
+    };
+    axios.post(`http://${config.host}:${config.port}/qa/questions/${questionId}/answers`, payload)
+      .then((data) => {
+        // query database for answer manually
+        const queryText = `
+      SELECT answerer_name AS name, body
+      FROM answers
+      WHERE question_id=$1
+      AND email=$2`;
+        const queryParams = [questionId, payload.email];
+        return db.query(queryText, queryParams)
+          .then((response) => {
+            const { name, body } = response.rows[0];
+            expect(name).toEqual(payload.name);
+            expect(body).toEqual(payload.body);
+          })
+          // delete posted data manually
+          .then((response) => {
+            db.query(
+              'DELETE FROM answers WHERE question_id=$1 AND email=$2',
+              queryParams,
             );
             done();
           })
