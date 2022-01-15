@@ -28,3 +28,27 @@ describe('Q&A GET endpoints', () => {
       });
   });
 });
+
+describe('Q&A POST endpoints', () => {
+  it('Should add a question to the database (questions endpoint)', (done) => {
+    const payload = {};
+    axios.post(`http://${config.host}:${config.port}/qa/questions`, payload)
+      .then((response) => {
+        // query database for question manually
+        // expect().toEqual();
+        // manually remove entry from database
+        done();
+      });
+  });
+  it('Should add an answer to the database (answers endpoint)', (done) => {
+    const questionId = 1;
+    const payload = {}; //TODO: send
+    axios.get(`http://${config.host}:${config.port}/qa/questions/${questionId}/answers`, payload)
+      .then((response) => {
+        // query database for answer manually
+        // expect().toEqual();
+        // manually remove entry from database
+        done();
+      });
+  });
+});
