@@ -1,7 +1,4 @@
 const express = require('express');
-const path = require('path');
-const utils = require('./lib/utils');
-
 const app = express();
 
 // Middleware
@@ -10,6 +7,7 @@ const cors = require('cors');
 
 // Router
 const router = require('./routes');
+const config = require('../config');
 
 // Logging and parsing
 app.use(morgan('dev')); // TODO: update in prod
@@ -21,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/qa', router);
 
 app.get('/', (req, res) => {
-  res.send('hello world');
+  res.status(200).json(config.routes || {});
 });
 
 module.exports = app;
