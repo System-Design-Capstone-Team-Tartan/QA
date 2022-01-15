@@ -4,9 +4,6 @@ const axios = require('axios');
 const sampleData = require('./sampleData');
 const config = require('../config');
 
-// const { Pool } = require('pg');
-// const config = require('../config');
-
 describe('GET request data shape matches sample data', () => {
   it('Get questions endpoint response data shape must match sample data', (done) => {
     axios.get(`http://${config.host}:${config.port}/qa/questions?product_id=36`)
