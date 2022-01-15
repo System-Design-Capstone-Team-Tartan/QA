@@ -3,7 +3,7 @@ const models = require('../models');
 module.exports = {
   get: (req, res) => {
     let { count = 5, page = 1 } = req.query;
-    const { question_id: questionId } = req.params;
+    let { question_id: questionId } = req.params;
     count = Number(count);
     page = Number(page);
     questionId = questionId.toString();
