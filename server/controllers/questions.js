@@ -37,6 +37,8 @@ module.exports = {
                 {},
               );
               questionCopy.answers = answersCopy;
+              delete questionCopy.email;
+              delete questionCopy.product_id;
               return questionCopy;
             });
             res.status(200).json({
