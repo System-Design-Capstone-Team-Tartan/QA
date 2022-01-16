@@ -1,10 +1,9 @@
 const models = require('../models');
 
 module.exports = {
-  get: (req, res) => {
-    let {
-      product_id: productId, count = 5, page = 1,
-    } = req.query;
+  get: (req, res, next) => {
+    const { product_id: productId } = req.query;
+    let { count = 5, page = 1 } = req.query;
     count = Number(count);
     page = Number(page);
     if (count % 1 !== 0 || count <= 0) {
@@ -15,31 +14,8 @@ module.exports = {
       res.status(400).json({ status: 'Error', msg: 'product_id is required and must be a number' });
     } else {
       models.questions.query(productId, count, page)
-        .then((response) => {
-          const { rows: questionsArray } = response;
-          // TODO: move this logic to a utility fn
-          // update Copied variables
-          const results = questionsArray.map((question) => {
-            const questionCopy = question;
-            const answersCopy = !question.answers ? [] : question.answers.reduce(
-              (obj, answer) => {
-                const answerCopy = answer;
-                delete answerCopy.question_id;
-                delete answerCopy.reported;
-                delete answerCopy.email;
-                answerCopy.id = answerCopy.answer_id;
-                delete answerCopy.answer_id;
-                Object.assign(obj, { [answer.id]: answer });
-                return obj;
-              },
-              {},
-            );
-            questionCopy.answers = answersCopy;
-            delete questionCopy.email;
-            delete questionCopy.product_id;
-            return questionCopy;
-          });
-          return res.status(200).json({
+        .then((results) => {
+          res.status(200).json({
             status: 'OK',
             data: {
               product_id: productId,
@@ -47,13 +23,10 @@ module.exports = {
             },
           });
         })
-        .catch((err) => {
-          console.error('Internal database error fetching answers\n', err);
-          res.status(500).json({ msg: 'Internal database error fetching questions\n' });
-        });
+        .catch(next);
     }
   },
-  post: (req, res) => {
+  post: (req, res, next) => {
     const {
       product_id: productId, body, name, email,
     } = req.body;
@@ -72,34 +45,23 @@ module.exports = {
           res.status(201).json({ status: 'CREATED' });
           // TODO: handle duplicate entry gracefully
         })
-        .catch((err) => {
-          console.error('Internal database error posting answer\n', err);
-          res.status(500).json({ msg: 'Internal database error posting answer\n' });
-        });
+        .catch(next);
     }
   },
-  putHelpful: (req, res) => {
+  putHelpful: (req, res, next) => {
     const { question_id } = req.params;
-    const questionId = question_id.toString();
-    models.questions.updateHelpful(questionId)
+    models.questions.update({ question_id }, { $inc: { helpfulness: 1 } })
       .then((response) => {
         res.status(204).json({ status: 'NO CONTENT' });
       })
-      .catch((err) => {
-        console.error('Internal database error updating helpful count\n', err);
-        res.status(500).json({ msg: 'Internal database error updating helpful count for question\n' });
-      });
+      .catch(next);
   },
-  putReport: (req, res) => {
+  putReport: (req, res, next) => {
     const { question_id } = req.params;
-    const questionId = question_id.toString();
-    models.questions.updateReported(questionId)
+    models.questions.update({ question_id }, { reported: true })
       .then((response) => {
         res.status(204).json({ status: 'NO CONTENT' });
       })
-      .catch((err) => {
-        console.error('Internal database error updating helpful count\n', err);
-        res.status(500).json({ msg: 'Internal database error updating reported for question\n' });
-      });
+      .catch(next);
   },
 };

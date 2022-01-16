@@ -86,39 +86,4 @@ const questionSchema = mongoose.Schema({
   answers: [answerSchema],
 });
 
-const Question = mongoose.model('Questions', questionSchema);
-
-// TODO: move code below to controllers
-// and just export Question
-
-// for querying an answer by question_id quickly
-// [] exclude reported answers
-// [] sort by helpfulness
-// [] return object with keys set to answer_id
-module.exports.findAnswers = (questionId) => Question
-  .find(questionId)
-  // TODO: filter/sort results
-  .sort({ helpfulness: -1 });
-
-// for querying by product_id
-// [x] exclude reported answers
-// [x] limit
-// [x] sort by helpfulness descending
-// [x] offset
-module.exports.findQuestions = (productId, limit, offset) => Question
-  .find({ product_id: productId, reported: false })
-  .sort({ question_helpfulness: -1 })
-  .skip(offset)
-  .limit(limit);
-
-// questions: productId, body, name, email
-// answers: questionId, body, name, email, photos
-module.exports.insertEntry = (params) => Question
-  .create(params);
-
-// query by question_id or product_id
-// update reported OR helpfulness count
-// {reported: true}
-// {$inc: { helpfulness: 1 }}
-module.exports.update = (filter, update) => Question
-  .findOneAndUpdate(filter, update);
+module.exports = mongoose.model('Questions', questionSchema);

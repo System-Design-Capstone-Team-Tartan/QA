@@ -1,37 +1,33 @@
 const models = require('../models');
 
 module.exports = {
-  get: (req, res) => {
+  get: (req, res, next) => {
     let { count = 5, page = 1 } = req.query;
-    let { question_id: questionId } = req.params;
+    let { question_id } = req.params;
     count = Number(count);
     page = Number(page);
     if (count % 1 !== 0 || count <= 0) {
       res.status(400).json({ status: 'Error', msg: 'count must be whole number greater than 0' });
     } else if (page % 1 !== 0 || page <= 0) {
       res.status(400).json({ status: 'Error', msg: 'page must be whole number greater than 0' });
-    } else if (!questionId || Number.isNaN(parseInt(questionId, 10))) {
+    } else if (!question_id || Number.isNaN(parseInt(question_id, 10))) {
       res.status(400).json({ status: 'Error', msg: 'question_id is required and must be a number' });
     } else {
-      models.answers.query(questionId, count, page)
+      models.answers.query(question_id, count, page)
         .then((response) => {
           const { rows: results } = response;
           res.status(200).json({
             status: 'OK',
             data: {
-              question: questionId, page, count, results,
+              question: question_id, page, count, results,
             },
           });
         })
-        .catch((err) => {
-          console.error('Internal database error fetching answers\n', err);
-          res.status(500).json({ msg: 'Internal database error fetching answers\n' });
-        });
+        .catch(next);
     }
   },
-  post: (req, res) => {
+  post: (req, res, next) => {
     const { question_id } = req.params;
-    const questionId = question_id.toString();
     const {
       body, name, email, photos,
     } = req.body;
@@ -45,39 +41,28 @@ module.exports = {
     } else if (!Array.isArray(photos) || photos.some((photo) => typeof photo !== 'string')) {
       res.status(400).json({ status: 'Error', msg: 'photos must be array of strings' });
     } else {
-      models.answers.create(questionId, body, name, email, photos)
+      models.answers.create({ question_id, body, answerer_name: name, email, photos })
         .then((response) => {
           res.status(201).json({ status: 'CREATED' });
           // TODO: handle duplicate entry gracefully
         })
-        .catch((err) => {
-          console.error('Internal database error posting answer\n', err);
-          res.status(500).json({ msg: 'Internal database error posting answer\n' });
-        });
+        .catch(next);
     }
   },
-  putHelpful: (req, res) => {
+  putHelpful: (req, res, next) => {
     const { answer_id } = req.params;
-    const answerId = answer_id.toString();
-    models.answers.updateHelpful(answerId)
+    models.answers.update({ answer_id }, { $inc: { helpfulness: 1 } })
       .then((response) => {
         res.status(204).json({ status: 'NO CONTENT' });
       })
-      .catch((err) => {
-        console.error('Internal database error updating helpful count\n', err);
-        res.status(500).json({ msg: 'Internal database error updating helpful count for answer\n' });
-      });
+      .catch(next);
   },
-  putReport: (req, res) => {
+  putReport: (req, res, next) => {
     const { answer_id } = req.params;
-    const answerId = answer_id.toString();
-    models.answers.updateReported(answerId)
+    models.answers.update({ answer_id }, { reported: true })
       .then((response) => {
         res.status(204).json({ status: 'NO CONTENT' });
       })
-      .catch((err) => {
-        console.error('Internal database error updating reported\n', err);
-        res.status(500).json({ msg: 'Internal database error updating reported for answer\n' });
-      });
+      .catch(next);
   },
 };
