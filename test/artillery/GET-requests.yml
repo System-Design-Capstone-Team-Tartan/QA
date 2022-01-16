@@ -21,9 +21,12 @@ config:
 
 scenarios:
   - flow:
-      - log: "Querying answers"
+      - log: "Querying answers\n-question_id: {{ question_id }}"
       - get:
           url: "/{{ question_id }}/answers"
-      - log: "Querying questions"
+      - log: "Querying questions\n-product_id: {{ product_id }}"
       - get:
-          url: "?product_id={{ product_id }}"
+          url: "/"
+          qs:
+            product_id: "{{ product_id }}"
+
