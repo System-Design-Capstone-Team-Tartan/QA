@@ -113,7 +113,7 @@ module.exports.findQuestions = (productId, limit, offset) => Question
 
 // questions: productId, body, name, email
 // answers: questionId, body, name, email, photos
-  module.exports.insertEntry = (params) => Question
+module.exports.insertEntry = (params) => Question
   .create(params);
 
 // query by question_id or product_id
@@ -122,4 +122,3 @@ module.exports.findQuestions = (productId, limit, offset) => Question
 // {$inc: { helpfulness: 1 }}
 module.exports.update = (filter, update) => Question
   .findOneAndUpdate(filter, update);
-
