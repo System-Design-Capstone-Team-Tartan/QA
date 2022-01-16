@@ -97,7 +97,6 @@ module.exports = {
   putReport: (req, res) => {
     const { question_id } = req.params;
     const questionId = question_id.toString();
-    console.log(questionId)
     models.questions.updateReported(questionId)
       .then((response) => {
         res.status(204).json({ status: 'NO CONTENT' });
