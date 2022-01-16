@@ -1,0 +1,29 @@
+config:
+  target: "http://localhost:1337/qa/questions"
+  phases:
+    - duration: 60
+      arrivalRate: 5
+      name: Warm up
+    - duration: 60
+      arrivalRate: 5
+      rampTo: 25
+      name: Ramp up load
+    - duration: 60
+      arrivalRate: 25
+      name: Sustained load
+  payload:
+    path: "GET-queries.csv"
+    fields:
+      - "question_id"
+      - "product_id"
+    order: sequence
+    skipHeader: true
+
+scenarios:
+  - flow:
+      - log: "Querying answers"
+      - get:
+          url: "/{{ question_id }}/answers"
+      - log: "Querying questions"
+      - get:
+          url: "?product_id={{ product_id }}"
