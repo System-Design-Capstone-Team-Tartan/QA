@@ -86,7 +86,7 @@ const questionSchema = mongoose.Schema({
   answers: [answerSchema],
 });
 
-const Question = mongoose.model('Question', questionSchema);
+const Question = mongoose.model('Questions', questionSchema);
 
 // TODO: move code below to controllers
 // and just export Question
