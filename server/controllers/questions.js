@@ -21,7 +21,7 @@ module.exports = {
           // update Copied variables
           const results = questionsArray.map((question) => {
             const questionCopy = question;
-            const answersCopy = question.answers.reduce(
+            const answersCopy = !question.answers ? [] : question.answers.reduce(
               (obj, answer) => {
                 const answerCopy = answer;
                 delete answerCopy.question_id;
