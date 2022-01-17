@@ -1,8 +1,10 @@
+const compression = require('compression');
 const express = require('express');
 
 const app = express();
 
 // Middleware
+app.use(compression());
 const morgan = require('morgan');
 const cors = require('cors');
 

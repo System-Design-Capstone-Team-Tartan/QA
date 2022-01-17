@@ -17,39 +17,35 @@ module.exports = {
       models.questions.query(productId, count, page)
         .then((response) => {
           const { rows: questionsArray } = response;
-          if (!questionsArray || questionsArray.length < 1) {
-            res.status(400).json({ status: 'Error', msg: 'No results' });
-          } else {
-            // TODO: move this logic to a utility fn
-            // update Copied variables
-            const results = questionsArray.map((question) => {
-              const questionCopy = question;
-              const answersCopy = question.answers.reduce(
-                (obj, answer) => {
-                  const answerCopy = answer;
-                  delete answerCopy.question_id;
-                  delete answerCopy.reported;
-                  delete answerCopy.email;
-                  answerCopy.id = answerCopy.answer_id;
-                  delete answerCopy.answer_id;
-                  Object.assign(obj, { [answer.id]: answer });
-                  return obj;
-                },
-                {},
-              );
-              questionCopy.answers = answersCopy;
-              delete questionCopy.email;
-              delete questionCopy.product_id;
-              return questionCopy;
-            });
-            return res.status(200).json({
-              status: 'OK',
-              data: {
-                product_id: productId,
-                results,
+          // TODO: move this logic to a utility fn
+          // update Copied variables
+          const results = questionsArray.map((question) => {
+            const questionCopy = question;
+            const answersCopy = !question.answers ? [] : question.answers.reduce(
+              (obj, answer) => {
+                const answerCopy = answer;
+                delete answerCopy.question_id;
+                delete answerCopy.reported;
+                delete answerCopy.email;
+                answerCopy.id = answerCopy.answer_id;
+                delete answerCopy.answer_id;
+                Object.assign(obj, { [answer.id]: answer });
+                return obj;
               },
-            });
-          }
+              {},
+            );
+            questionCopy.answers = answersCopy;
+            delete questionCopy.email;
+            delete questionCopy.product_id;
+            return questionCopy;
+          });
+          return res.status(200).json({
+            status: 'OK',
+            data: {
+              product_id: productId,
+              results,
+            },
+          });
         })
         .catch((err) => {
           console.error('Internal database error fetching answers\n', err);
@@ -97,7 +93,6 @@ module.exports = {
   putReport: (req, res) => {
     const { question_id } = req.params;
     const questionId = question_id.toString();
-    console.log(questionId)
     models.questions.updateReported(questionId)
       .then((response) => {
         res.status(204).json({ status: 'NO CONTENT' });

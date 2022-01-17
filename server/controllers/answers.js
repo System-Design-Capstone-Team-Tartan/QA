@@ -16,16 +16,12 @@ module.exports = {
       models.answers.query(questionId, count, page)
         .then((response) => {
           const { rows: results } = response;
-          if (!results || results.length < 1) {
-            res.status(400).json({ status: 'Error', msg: 'No results' });
-          } else {
-            res.status(200).json({
-              status: 'OK',
-              data: {
-                question: questionId, page, count, results,
-              },
-            });
-          }
+          res.status(200).json({
+            status: 'OK',
+            data: {
+              question: questionId, page, count, results,
+            },
+          });
         })
         .catch((err) => {
           console.error('Internal database error fetching answers\n', err);
