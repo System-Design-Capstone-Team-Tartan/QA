@@ -1,4 +1,4 @@
-const models = require('../models');
+const models = require('../../models/mongo');
 
 module.exports = {
   get: (req, res, next) => {
