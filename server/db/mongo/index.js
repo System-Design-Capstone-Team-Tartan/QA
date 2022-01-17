@@ -6,7 +6,6 @@ mongoose.connect(
   {
     useNewURLParser: true,
     useUnifiedTopology: true,
-    useFindAndModify: false,
   },
 );
 
@@ -78,7 +77,7 @@ const questionSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  email: {
+  asker_email: {
     type: String,
     required: 'questioner email is required',
     maxLength: 60,
