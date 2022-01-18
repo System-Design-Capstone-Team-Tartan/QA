@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  qa:
+    build: .
+    depends_on:
+      - 'database'
+    ports:
+      - '1337:1337'
+
+  database:
+
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=tartar
+      - POSTGRES_DB=tmp
+    build: ./server/db/
+    image: postgres
+    restart: always
