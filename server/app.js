@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
   res.status(200).json(config.routes || {});
 });
 
-app.get(config.loaderIO || '<- loader_io_verification token', (req, res) => {
+app.get(`/${config.loaderIO}` || '<- loader_io_verification token', (req, res) => {
   res.status(200).send(config.loaderIO);
 });
 
