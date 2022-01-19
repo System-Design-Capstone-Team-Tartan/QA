@@ -11,6 +11,7 @@ const cors = require('cors');
 // Router
 const router = require('./routes');
 const config = require('../config');
+const testParams = require('./loader.io.json');
 
 // Logging and parsing
 app.use(morgan('dev')); // TODO: update in prod
