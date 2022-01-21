@@ -43,6 +43,16 @@ CREATE TABLE images_tmp (
   PRIMARY KEY (image_id)
 );
 
+-- Add indexing to tables
+CREATE INDEX q_product_id
+ON questions (product_id);
+CREATE INDEX q_question_id
+ON questions (question_id);
+CREATE INDEX a_question_id
+ON answers (question_id);
+CREATE INDEX a_answer_id
+ON answers (answer_id);
+
 -- Copy data from questions.csv, answers.csv, & answers_photos.csv
 copy questions (question_id, product_id, question_body, question_date, asker_name, email, reported, question_helpfulness)
   from '/home/aaron/Documents/hackReactor/git_repo/SDC/server/db/postgres/CSV/questions.csv'
