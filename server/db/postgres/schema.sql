@@ -46,7 +46,7 @@ CREATE TABLE images_tmp (
 -- Add indexing to tables
 CREATE INDEX q_product_id
 ON questions (product_id);
-CREATE INDEX q_product_id
+CREATE INDEX q_question_id
 ON questions (question_id);
 CREATE INDEX a_question_id
 ON answers (question_id);
