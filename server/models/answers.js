@@ -9,7 +9,7 @@ module.exports = {
      WHERE question_id=$1 AND reported=false
      ORDER BY helpfulness DESC
      LIMIT $2 OFFSET $3;`,
-    [questionId.toString(), count, ((page - 1) * count)],
+    [questionId, count, ((page - 1) * count)],
   ),
   // Adds an answer for the given question
   insert: (questionId, body, name, email, photos) => db.query(
@@ -22,7 +22,7 @@ module.exports = {
     `UPDATE answers
     SET helpfulness=helpfulness+1
     WHERE answer_id = $1;`,
-    [answerId.toString()],
+    [answerId],
   ),
   // Updates an answer to show it has been reported.
   // Note, this action does not delete the answer,
@@ -31,6 +31,6 @@ module.exports = {
     `UPDATE answers
      SET reported=true
      WHERE answer_id=$1;`,
-    [answerId.toString()],
+    [answerId],
   ),
 };
