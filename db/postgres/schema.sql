@@ -29,7 +29,7 @@ CREATE TABLE answers (
   email varchar(60) NOT NULL,
   reported BOOLEAN NOT NULL DEFAULT FALSE,
   helpfulness INT NOT NULL DEFAULT 0,
-  photos TEXT[],
+  photos TEXT[] DEFAULT array[]::text[],
   FOREIGN KEY (question_id)
     REFERENCES questions(question_id),
   PRIMARY KEY (answer_id)
