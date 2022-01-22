@@ -3,7 +3,7 @@
 const axios = require('axios');
 const sampleData = require('./sampleData');
 const config = require('../config');
-const db = require('../server/db/postgres');
+const db = require('../db/postgres');
 
 describe('Q&A GET endpoints', () => {
   it('Should return payload w/ data shape matching sample data (questions endpoint)', (done) => {
