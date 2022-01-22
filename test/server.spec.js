@@ -18,7 +18,6 @@ describe.only('Q&A GET endpoints', () => {
           // Verify values' type matches
           const expectedQuestionObject = sampleData.questions.results[0];
           Object.keys(expectedQuestionObject).forEach((key) => {
-            console.log(key, ': ',expectedQuestionObject[key])
             expect(typeof expectedQuestionObject[key]).toEqual(typeof actualQuestionObject[key]);
           });
         });
