@@ -53,6 +53,10 @@ ON answers (question_id);
 CREATE INDEX a_answer_id
 ON answers (answer_id);
 
+-- Add constraints to avoid duplicate entries
+ALTER TABLE questions ADD CONSTRAINT unique_questions UNIQUE (product_id, question_body, asker_name, email);
+ALTER TABLE answers ADD CONSTRAINT unique_answers UNIQUE (question_id, body, answerer_name, email, photos);
+
 -- Copy data from questions.csv, answers.csv, & answers_photos.csv
 copy questions (question_id, product_id, question_body, question_date, asker_name, email, reported, question_helpfulness)
   from '/home/aaron/Documents/hackReactor/git_repo/SDC/db/postgres/CSV/questions.csv'

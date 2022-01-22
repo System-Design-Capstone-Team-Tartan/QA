@@ -50,9 +50,13 @@ module.exports = {
         models.answers.insert(questionId, body, name, email, photos)
           .then(() => {
             res.status(201).json({ status: 'CREATED' });
-            // TODO: handle duplicate entry gracefully
           })
-          .catch(next);
+          .catch((err) => {
+            if (err.code === '23505') {
+              res.status(400).json({ status: 'Error', msg: 'Entry already exists' });
+            }
+            next();
+          });
       }
     } catch {
       res.status(500).json({ msg: 'Internal database error posting new answer' });
