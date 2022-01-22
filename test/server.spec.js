@@ -42,7 +42,7 @@ describe('Q&A POST endpoints', () => {
       product_id: 36,
     };
     axios.post(`http://${config.host}:${config.port}/qa/questions`, payload)
-      .then((data) => {
+      .then(() => {
         // query database for question manually
         const queryText = `
         SELECT asker_name AS name, question_body AS body
@@ -57,7 +57,7 @@ describe('Q&A POST endpoints', () => {
             expect(body).toEqual(payload.body);
           })
           // delete posted data manually
-          .then((response) => {
+          .then(() => {
             db.query(
               'DELETE FROM questions WHERE product_id=$1 AND email=$2',
               queryParams,
@@ -80,7 +80,7 @@ describe('Q&A POST endpoints', () => {
       photos: [],
     };
     axios.post(`http://${config.host}:${config.port}/qa/questions/${questionId}/answers`, payload)
-      .then((data) => {
+      .then(() => {
         // query database for answer manually
         const queryText = `
       SELECT answerer_name AS name, body
@@ -95,7 +95,7 @@ describe('Q&A POST endpoints', () => {
             expect(body).toEqual(payload.body);
           })
           // delete posted data manually
-          .then((response) => {
+          .then(() => {
             db.query(
               'DELETE FROM answers WHERE question_id=$1 AND email=$2',
               queryParams,
