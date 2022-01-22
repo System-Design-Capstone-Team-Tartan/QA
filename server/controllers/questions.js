@@ -1,4 +1,5 @@
 const models = require('../models');
+const utils = require('../../utils');
 
 module.exports = {
   get: (req, res, next) => {
@@ -67,16 +68,19 @@ module.exports = {
         res.status(400).json({ status: 'Error', msg: 'name must be string <= 60 chars in length' });
       } else if (!productId || typeof productId !== 'number' || productId <= 0 || productId % 1 !== 0) {
         res.status(400).json({ status: 'Error', msg: 'product_id must be an integer' });
-      } else if (!email || typeof email !== 'string' || email.length > 60) {
-        // TODO: use regex for e-mail verification
-        res.status(400).json({ status: 'Error', msg: 'email must be string <= 60 chars in length' });
+      } else if (!email || typeof email !== 'string' || email.length > 60 || !utils.validateEmail(email)) {
+        res.status(400).json({ status: 'Error', msg: 'email must be a valid email string <= 60 chars in length' });
       } else {
         models.questions.insert(productId, body, name, email)
           .then(() => {
             res.status(201).json({ status: 'CREATED' });
-            // TODO: handle duplicate entry gracefully
           })
-          .catch(next);
+          .catch((err) => {
+            if (err.code === '23505') {
+              res.status(400).json({ status: 'Error', msg: 'Entry already exists' });
+            }
+            next();
+          });
       }
     } catch {
       res.status(500).json({ msg: 'Internal database error posting answer' });
@@ -85,8 +89,7 @@ module.exports = {
   },
   putHelpful: (req, res, next) => {
     try {
-      const { question_id } = req.params;
-      const questionId = question_id.toString();
+      const { question_id: questionId } = req.params;
       models.questions.updateHelpful(questionId)
         .then(() => {
           res.status(204).json({ status: 'NO CONTENT' });
@@ -99,8 +102,7 @@ module.exports = {
   },
   putReport: (req, res, next) => {
     try {
-      const { question_id } = req.params;
-      const questionId = question_id.toString();
+      const { question_id: questionId } = req.params;
       models.questions.updateReported(questionId)
         .then(() => {
           res.status(204).json({ status: 'NO CONTENT' });
