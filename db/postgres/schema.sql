@@ -55,13 +55,13 @@ ON answers (answer_id);
 
 -- Copy data from questions.csv, answers.csv, & answers_photos.csv
 copy questions (question_id, product_id, question_body, question_date, asker_name, email, reported, question_helpfulness)
-  from '/home/aaron/Documents/hackReactor/git_repo/SDC/server/db/postgres/CSV/questions.csv'
+  from '/home/aaron/Documents/hackReactor/git_repo/SDC/db/postgres/CSV/questions.csv'
   with (format csv, header true, delimiter ',');
 copy answers (answer_id, question_id, body, date, answerer_name, email, reported, helpfulness)
-  from '/home/aaron/Documents/hackReactor/git_repo/SDC/server/db/postgres/CSV/answers.csv'
+  from '/home/aaron/Documents/hackReactor/git_repo/SDC/db/postgres/CSV/answers.csv'
   with (format csv, header true, delimiter ',');
 copy images_tmp (image_id, answer_id, url)
-  from '/home/aaron/Documents/hackReactor/git_repo/SDC/server/db/postgres/CSV/answers_photos.csv'
+  from '/home/aaron/Documents/hackReactor/git_repo/SDC/db/postgres/CSV/answers_photos.csv'
   with (format csv, header true, delimiter ',');
 
 -- Update SERIAL sequence for questions.question_id column & answers.answer_id
