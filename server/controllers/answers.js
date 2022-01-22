@@ -4,7 +4,7 @@ module.exports = {
   get: (req, res, next) => {
     try {
       let { count = 5, page = 1 } = req.query;
-      let { question_id: questionId } = req.params;
+      const { question_id: questionId } = req.params;
       count = Number(count);
       page = Number(page);
       if (count % 1 !== 0 || count <= 0) {
@@ -33,8 +33,7 @@ module.exports = {
   },
   post: (req, res, next) => {
     try {
-      const { question_id } = req.params;
-      const questionId = question_id.toString();
+      const { question_id: questionId } = req.params;
       const {
         body, name, email, photos,
       } = req.body;
@@ -62,8 +61,7 @@ module.exports = {
   },
   putHelpful: (req, res, next) => {
     try {
-      const { answer_id } = req.params;
-      const answerId = answer_id.toString();
+      const { answer_id: answerId } = req.params;
       models.answers.updateHelpful(answerId)
         .then(() => {
           res.status(204).json({ status: 'NO CONTENT' });
@@ -76,8 +74,7 @@ module.exports = {
   },
   putReport: (req, res, next) => {
     try {
-      const { answer_id } = req.params;
-      const answerId = answer_id.toString();
+      const { answer_id: answerId } = req.params;
       models.answers.updateReported(answerId)
         .then(() => {
           res.status(204).json({ status: 'NO CONTENT' });

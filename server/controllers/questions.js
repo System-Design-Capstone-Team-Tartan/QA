@@ -85,8 +85,7 @@ module.exports = {
   },
   putHelpful: (req, res, next) => {
     try {
-      const { question_id } = req.params;
-      const questionId = question_id.toString();
+      const { question_id: questionId } = req.params;
       models.questions.updateHelpful(questionId)
         .then(() => {
           res.status(204).json({ status: 'NO CONTENT' });
@@ -99,8 +98,7 @@ module.exports = {
   },
   putReport: (req, res, next) => {
     try {
-      const { question_id } = req.params;
-      const questionId = question_id.toString();
+      const { question_id: questionId } = req.params;
       models.questions.updateReported(questionId)
         .then(() => {
           res.status(204).json({ status: 'NO CONTENT' });
