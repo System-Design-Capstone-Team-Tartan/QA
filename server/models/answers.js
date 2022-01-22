@@ -1,4 +1,4 @@
-const db = require('../db/postgres');
+const db = require('../../db/postgres');
 
 module.exports = {
   // Returns answers for a given question. This list does not include any reported answers.
