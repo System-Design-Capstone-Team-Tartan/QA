@@ -47,7 +47,7 @@ module.exports = {
       } else if (!Array.isArray(photos) || photos.some((photo) => typeof photo !== 'string')) {
         res.status(400).json({ status: 'Error', msg: 'photos must be array of strings' });
       } else {
-        models.answers.create(questionId, body, name, email, photos)
+        models.answers.insert(questionId, body, name, email, photos)
           .then(() => {
             res.status(201).json({ status: 'CREATED' });
             // TODO: handle duplicate entry gracefully

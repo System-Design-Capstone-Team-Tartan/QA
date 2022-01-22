@@ -12,7 +12,7 @@ module.exports = {
     [questionId.toString(), count, ((page - 1) * count)],
   ),
   // Adds an answer for the given question
-  create: (questionId, body, name, email, photos) => db.query(
+  insert: (questionId, body, name, email, photos) => db.query(
     `INSERT INTO answers (question_id, body, answerer_name, email, photos)
      VALUES ($1, $2, $3, $4, $5);`,
     [questionId, body, name, email, photos],
