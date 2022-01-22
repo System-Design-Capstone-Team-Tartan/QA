@@ -7,7 +7,7 @@
     "test": "jest",
     "stress-test": "artillery run test/artillery/GET-requests.yml",
     "start": "nodemon --ignore node_modules server",
-    "init:db": "psql --host=localhost --dbname=qa --username=admin < server/db/postgres/schema.sql"
+    "init:db": "psql --host=localhost --dbname=qa --username=admin < db/postgres/schema.sql"
   },
   "repository": {
     "type": "git",
