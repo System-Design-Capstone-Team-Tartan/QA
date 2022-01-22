@@ -8,13 +8,13 @@ CREATE DATABASE qa;
 DROP TABLE IF EXISTS questions CASCADE;
 CREATE TABLE questions (
   question_id SERIAL,
-  product_id varchar(20),
+  product_id varchar(20) NOT NULL,
   question_body varchar(1000) NOT NULL,
   question_date TIMESTAMP WITH TIME ZONE DEFAULT now(),
   asker_name varchar(60) NOT NULL,
   question_helpfulness INT NOT NULL DEFAULT 0,
   reported BOOLEAN NOT NULL DEFAULT FALSE,
-  email varchar(60),
+  email varchar(60) NOT NULL,
   PRIMARY KEY (question_id)
 );
 
@@ -29,7 +29,7 @@ CREATE TABLE answers (
   email varchar(60) NOT NULL,
   reported BOOLEAN NOT NULL DEFAULT FALSE,
   helpfulness INT NOT NULL DEFAULT 0,
-  photos TEXT[] DEFAULT array[]::text[],
+  photos TEXT[] DEFAULT array[]::text[] NOT NULL,
   FOREIGN KEY (question_id)
     REFERENCES questions(question_id),
   PRIMARY KEY (answer_id)
@@ -39,7 +39,7 @@ DROP TABLE IF EXISTS images_tmp CASCADE;
 CREATE TABLE images_tmp (
   image_id INT NOT NULL,
   answer_id INT NOT NULL,
-  url varchar(3000),
+  url varchar(3000) NOT NULL,
   PRIMARY KEY (image_id)
 );
 
