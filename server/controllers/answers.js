@@ -1,4 +1,5 @@
 const models = require('../models');
+const utils = require('../../utils');
 
 module.exports = {
   get: (req, res, next) => {
@@ -41,9 +42,8 @@ module.exports = {
         res.status(400).json({ status: 'Error', msg: 'answer body must be string <= 1000 chars in length' });
       } else if (!name || typeof name !== 'string' || name.length > 60) {
         res.status(400).json({ status: 'Error', msg: 'name must be string <= 60 chars in length' });
-      } else if (!email || typeof email !== 'string' || email.length > 60) {
-        // TODO: use regex for e-mail verification
-        res.status(400).json({ status: 'Error', msg: 'email must be string <= 60 chars in length' });
+      } else if (!email || typeof email !== 'string' || email.length > 60 || !utils.validateEmail(email)) {
+        res.status(400).json({ status: 'Error', msg: 'email must be valid email string <= 60 chars in length' });
       } else if (!Array.isArray(photos) || photos.some((photo) => typeof photo !== 'string')) {
         res.status(400).json({ status: 'Error', msg: 'photos must be array of strings' });
       } else {
