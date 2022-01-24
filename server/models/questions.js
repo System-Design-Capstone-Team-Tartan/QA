@@ -16,7 +16,7 @@ module.exports = {
     WHERE q.product_id=$1
     ORDER BY q.question_helpfulness DESC
     LIMIT $2 OFFSET $3;`,
-    [productId.toString(), count, ((page - 1) * count)],
+    [productId, count, ((page - 1) * count)],
   ),
   // Adds a question for the given product
   insert: (productId, body, name, email) => db.query(
