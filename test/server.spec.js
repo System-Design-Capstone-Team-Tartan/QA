@@ -5,14 +5,21 @@ const sampleData = require('./sampleData');
 const config = require('../config');
 const db = require('../db/postgres');
 
-describe('Q&A GET endpoints', () => {
+describe.only('Q&A GET endpoints', () => {
   it('Should return payload w/ data shape matching sample data (questions endpoint)', (done) => {
     const productId = 36;
     axios.get(`http://${config.host}:${config.port}/qa/questions?product_id=${productId}`)
       .then((response) => {
         const { data } = response.data;
-        data.results.forEach((question) => {
-          expect(Object.keys(question)).toEqual(Object.keys(sampleData.questions.results[0]));
+        data.results.forEach((actualQuestionObject) => {
+          // Verify keys match
+          expect(Object.keys(actualQuestionObject))
+            .toEqual(Object.keys(sampleData.questions.results[0]));
+          // Verify values' type matches
+          const expectedQuestionObject = sampleData.questions.results[0];
+          Object.keys(expectedQuestionObject).forEach((key) => {
+            expect(typeof expectedQuestionObject[key]).toEqual(typeof actualQuestionObject[key]);
+          });
         });
         done();
       });
@@ -22,8 +29,15 @@ describe('Q&A GET endpoints', () => {
     axios.get(`http://${config.host}:${config.port}/qa/questions/${questionId}/answers`)
       .then((response) => {
         const { data } = response.data;
-        data.results.forEach((answer) => {
-          expect(Object.keys(answer)).toEqual(Object.keys(sampleData.answers.results[0]));
+        data.results.forEach((actualAnswerObject) => {
+          // Verify keys match
+          expect(Object.keys(actualAnswerObject))
+            .toEqual(Object.keys(sampleData.answers.results[0]));
+          // Verify values' type matches
+          const expectedAnswerObject = sampleData.answers.results[0];
+          Object.keys(expectedAnswerObject).forEach((key) => {
+            expect(typeof expectedAnswerObject[key]).toEqual(typeof actualAnswerObject[key]);
+          });
         });
         done();
       });
@@ -73,10 +87,12 @@ describe('Q&A POST endpoints', () => {
 
   it('Should add an answer to the answers table of the qa database', (done) => {
     const questionId = 1;
+    // TODO: make payload unique each time
+    // to get around duplicate entry check
     const payload = {
       body: 'Yes you can!',
-      name: 'IHaveAnswers',
-      email: 'AskMeAQuestion@mail.com',
+      name: 'asdfasdfasdf',
+      email: 'sdfsdf@mail.com',
       photos: [],
     };
     axios.post(`http://${config.host}:${config.port}/qa/questions/${questionId}/answers`, payload)
